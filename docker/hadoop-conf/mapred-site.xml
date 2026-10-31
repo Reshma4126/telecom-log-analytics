@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <!-- Use YARN as execution framework for MapReduce -->
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+    </property>
+
+    <!-- Configure split size:
+         Our dataset telecom_calls_large.csv is ~3.6 MB.
+         By setting maxsize to 1048576 (1 MiB), MapReduce will divide the ~3.6 MB file
+         into 4 input splits, creating 4 map tasks. -->
+    <property>
+        <name>mapreduce.input.fileinputformat.split.maxsize</name>
+        <value>1048576</value>
+        <description>1 MiB maximum split size</description>
+    </property>
+
+    <!-- Map task container memory limit and JVM heap setting -->
+    <property>
+        <name>mapreduce.map.memory.mb</name>
+        <value>384</value>
+    </property>
+    <property>
+        <name>mapreduce.map.java.opts</name>
+        <value>-Xmx256m</value>
+    </property>
+
+    <!-- Reduce task container memory limit and JVM heap setting -->
+    <property>
+        <name>mapreduce.reduce.memory.mb</name>
+        <value>384</value>
+    </property>
+    <property>
+        <name>mapreduce.reduce.java.opts</name>
+        <value>-Xmx256m</value>
+    </property>
+
+    <!-- ApplicationMaster container memory limit and JVM heap setting -->
+    <property>
+        <name>yarn.app.mapreduce.am.resource.mb</name>
+        <value>384</value>
+    </property>
+    <property>
+        <name>yarn.app.mapreduce.am.command-opts</name>
+        <value>-Xmx256m</value>
+    </property>
+
+    <!-- Environment classpaths needed by Hadoop 3 on Linux -->
+    <property>
+        <name>yarn.app.mapreduce.am.env</name>
+        <value>HADOOP_MAPRED_HOME=/opt/hadoop</value>
+    </property>
+    <property>
+        <name>mapreduce.map.env</name>
+        <value>HADOOP_MAPRED_HOME=/opt/hadoop</value>
+    </property>
+    <property>
+        <name>mapreduce.reduce.env</name>
+        <value>HADOOP_MAPRED_HOME=/opt/hadoop</value>
+    </property>
+</configuration>

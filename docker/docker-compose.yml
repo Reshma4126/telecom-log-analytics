@@ -1,0 +1,127 @@
+services:
+  telecom-master:
+    image: apache/hadoop:3.4.2-lean
+    container_name: telecom-master
+    hostname: telecom-master
+    entrypoint: ["/bin/bash", "/opt/scripts/entrypoint-master.sh"]
+    networks:
+      - telecom-net
+    ports:
+      - "9870:9870"  # HDFS NameNode Web UI
+      - "8088:8088"  # YARN ResourceManager Web UI
+      - "9000:9000"  # HDFS NameNode IPC
+      - "8032:8032"  # YARN ResourceManager IPC
+    volumes:
+      - namenode-data:/opt/hadoop/data/name
+      - /usr/local/hadoop/share/hadoop/yarn:/opt/hadoop/share/hadoop/yarn:ro
+      - /usr/local/hadoop/share/hadoop/mapreduce:/opt/hadoop/share/hadoop/mapreduce:ro
+      - ./hadoop-conf:/opt/hadoop/etc/hadoop:ro
+      - ./scripts:/opt/scripts:ro
+      - ../:/opt/host-project:ro
+    deploy:
+      resources:
+        limits:
+          memory: 1792M
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -c
+        - >
+          jps | grep -q NameNode &&
+          jps | grep -q ResourceManager &&
+          (echo > /dev/tcp/localhost/9870) 2>/dev/null &&
+          (echo > /dev/tcp/localhost/8088) 2>/dev/null || exit 1
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  telecom-worker-01:
+    image: apache/hadoop:3.4.2-lean
+    container_name: telecom-worker-01
+    hostname: telecom-worker-01
+    entrypoint: ["/bin/bash", "/opt/scripts/entrypoint-worker.sh"]
+    depends_on:
+      telecom-master:
+        condition: service_healthy
+    networks:
+      - telecom-net
+    ports:
+      - "9864:9864"  # DataNode 1 Web UI
+      - "8042:8042"  # NodeManager 1 Web UI
+    volumes:
+      - datanode-01-data:/opt/hadoop/data/data
+      - /usr/local/hadoop/share/hadoop/yarn:/opt/hadoop/share/hadoop/yarn:ro
+      - /usr/local/hadoop/share/hadoop/mapreduce:/opt/hadoop/share/hadoop/mapreduce:ro
+      - ./hadoop-conf:/opt/hadoop/etc/hadoop:ro
+      - ./scripts:/opt/scripts:ro
+    deploy:
+      resources:
+        limits:
+          memory: 1792M
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -c
+        - >
+          jps | grep -q DataNode &&
+          jps | grep -q NodeManager &&
+          (echo > /dev/tcp/localhost/9864) 2>/dev/null &&
+          (echo > /dev/tcp/localhost/8042) 2>/dev/null || exit 1
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  telecom-worker-02:
+    image: apache/hadoop:3.4.2-lean
+    container_name: telecom-worker-02
+    hostname: telecom-worker-02
+    entrypoint: ["/bin/bash", "/opt/scripts/entrypoint-worker.sh"]
+    depends_on:
+      telecom-master:
+        condition: service_healthy
+    networks:
+      - telecom-net
+    ports:
+      - "9865:9864"  # DataNode 2 Web UI mapped to host 9865
+      - "8043:8042"  # NodeManager 2 Web UI mapped to host 8043
+    volumes:
+      - datanode-02-data:/opt/hadoop/data/data
+      - /usr/local/hadoop/share/hadoop/yarn:/opt/hadoop/share/hadoop/yarn:ro
+      - /usr/local/hadoop/share/hadoop/mapreduce:/opt/hadoop/share/hadoop/mapreduce:ro
+      - ./hadoop-conf:/opt/hadoop/etc/hadoop:ro
+      - ./scripts:/opt/scripts:ro
+    deploy:
+      resources:
+        limits:
+          memory: 1792M
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -c
+        - >
+          jps | grep -q DataNode &&
+          jps | grep -q NodeManager &&
+          (echo > /dev/tcp/localhost/9864) 2>/dev/null &&
+          (echo > /dev/tcp/localhost/8042) 2>/dev/null || exit 1
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+networks:
+  telecom-net:
+    name: telecom-hadoop-net
+    driver: bridge
+
+volumes:
+  namenode-data:
+    name: telecom_namenode_data
+  datanode-01-data:
+    name: telecom_datanode_01_data
+  datanode-02-data:
+    name: telecom_datanode_02_data

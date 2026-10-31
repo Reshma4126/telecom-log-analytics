@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <!-- We have 2 DataNodes in our cluster, so replication factor is set to 2 -->
+    <property>
+        <name>dfs.replication</name>
+        <value>2</value>
+    </property>
+
+    <!-- NameNode metadata storage directory inside telecom-master container -->
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:///opt/hadoop/data/name</value>
+    </property>
+
+    <!-- DataNode block storage directory inside worker containers -->
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:///opt/hadoop/data/data</value>
+    </property>
+
+    <!-- Disable permission checking for simplified educational local exploration -->
+    <property>
+        <name>dfs.permissions.enabled</name>
+        <value>false</value>
+    </property>
+
+    <!-- Web UI address for NameNode -->
+    <property>
+        <name>dfs.namenode.http-address</name>
+        <value>0.0.0.0:9870</value>
+    </property>
+
+    <!-- Web UI address for DataNode -->
+    <property>
+        <name>dfs.datanode.http.address</name>
+        <value>0.0.0.0:9864</value>
+    </property>
+</configuration>

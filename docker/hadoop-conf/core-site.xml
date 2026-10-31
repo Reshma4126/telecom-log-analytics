@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <!-- Default FileSystem points to the containerized telecom-master NameNode -->
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://telecom-master:9000</value>
+        <description>The NameNode URI</description>
+    </property>
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/opt/hadoop/data/tmp</value>
+        <description>Base directory for container temporary files</description>
+    </property>
+</configuration>

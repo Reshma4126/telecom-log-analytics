@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <!-- Master node hostname for YARN ResourceManager -->
+    <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>telecom-master</value>
+    </property>
+
+    <!-- MapReduce shuffle auxiliary service required for intermediate data sort/shuffle -->
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.aux-services.mapreduce_shuffle.class</name>
+        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+    </property>
+
+    <!-- Conservative Memory Management:
+         Each worker allocates 768 MB for running YARN task containers.
+         Since each map or reduce container requests 384 MB,
+         each worker can host up to 2 simultaneous tasks (2 x 384 MB = 768 MB). -->
+    <property>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>768</value>
+    </property>
+
+    <!-- 2 virtual cores per worker -->
+    <property>
+        <name>yarn.nodemanager.resource.cpu-vcores</name>
+        <value>2</value>
+    </property>
+
+    <!-- Minimum and Maximum memory allocation per container request -->
+    <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>384</value>
+    </property>
+    <property>
+        <name>yarn.scheduler.maximum-allocation-mb</name>
+        <value>768</value>
+    </property>
+
+    <!-- Turn off strict virtual memory check (prevents container aborts on Linux container memory estimation) -->
+    <property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>false</value>
+    </property>
+
+    <!-- Physical memory enforcement enabled -->
+    <property>
+        <name>yarn.nodemanager.pmem-check-enabled</name>
+        <value>true</value>
+    </property>
+
+    <!-- ResourceManager Web UI bind address -->
+    <property>
+        <name>yarn.resourcemanager.webapp.address</name>
+        <value>0.0.0.0:8088</value>
+    </property>
+
+    <!-- NodeManager Web UI bind address -->
+    <property>
+        <name>yarn.nodemanager.webapp.address</name>
+        <value>0.0.0.0:8042</value>
+    </property>
+</configuration>

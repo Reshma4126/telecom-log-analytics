@@ -1,0 +1,12 @@
+
+call_id,caller_region,receiver_region,duration_seconds,status
+C001,Coimbatore,Chennai,120,SUCCESS
+C002,Chennai,Bengaluru,300,SUCCESS
+C003,Coimbatore,Chennai,0,FAILED
+C004,Bengaluru,Coimbatore,180,SUCCESS
+C005,Chennai,Coimbatore,0,FAILED
+C006,Coimbatore,Bengaluru,240,SUCCESS
+C007,Bengaluru,Chennai,90,SUCCESS
+C008,Chennai,Bengaluru,0,FAILED
+C009,Coimbatore,Chennai,150,SUCCESS
+C010,Bengaluru,Coimbatore,210,SUCCESS
